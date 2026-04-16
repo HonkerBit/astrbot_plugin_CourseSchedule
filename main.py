@@ -194,17 +194,9 @@ class Main(Star):
         session_desc = f"群号：{session_id}" if event.get_group_id() else "私聊"
         yield event.plain_result(f"课表绑定成功！（{session_desc}）")
 
-    @event_message_type(EventMessageType.GROUP_MESSAGE)
-    async def _handle_group_messages(self, event: AstrMessageEvent):
-        """群消息统一入口：分发给文件处理和 WakeUp 口令处理"""
-        async for item in self.handle_file_message(event):
-            yield item
-        async for item in self.handle_wakeup_token(event):
-            yield item
-
-    @event_message_type(EventMessageType.FRIEND_MESSAGE)
-    async def _handle_friend_messages(self, event: AstrMessageEvent):
-        """私聊消息统一入口：分发给文件处理和 WakeUp 口令处理"""
+    @event_message_type(EventMessageType.ALL)
+    async def _handle_binding_messages(self, event: AstrMessageEvent):
+        """所有消息类型统一入口：分发给文件处理和 WakeUp 口令处理"""
         async for item in self.handle_file_message(event):
             yield item
         async for item in self.handle_wakeup_token(event):
